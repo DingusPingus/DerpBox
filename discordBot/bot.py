@@ -1,5 +1,6 @@
 import discord
 import sqlite3
+import os
 from discord.ext import commands
 
 intents = discord.Intents(messages = True, guilds = True, reactions = True, members = True, presences = True)
@@ -18,9 +19,23 @@ c = db.cursor()
 # db.commit()
 
 
-@client.event
-async def on_ready():
-   print('We have logged in as {0.user}'.format(client))
+
+
+@client.command()
+async def load(ctx, extension):
+        client.load_extension(f'cogs.{extension}')
+
+@client.command()
+async def unload(ctx, extension):
+        client.unload_extension(f'cogs.{extension}')
+
+
+for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+                client.load_extension(f'cogs.{filename[:-3]}')
+
+
+
 
 
 @client.command(aliases=['nial4life'])
@@ -30,6 +45,8 @@ async def nial(ctx):
         c.execute("UPDATE Counters SET val =" +str(nialCounter)+ " WHERE name ='#nial4life' ")
         db.commit()
         await ctx.send('#nial4life: ' + str(nialCounter))
+
+#TODO implement database for other commands applied to nial
 
 client.run('ODM2MzYyMjU4OTA0MzgzNTQ5.YIc5DQ.PW9C_q9Av1oGZMKnEU8W6eB5O7I')
 db.close()
