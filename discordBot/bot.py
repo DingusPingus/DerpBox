@@ -46,5 +46,7 @@ async def nial(ctx):
         db.commit()
         await ctx.send('#nial4life: ' + str(nialCounter))
 
+#TODO implement database for other commands applied to nial
+
 client.run('ODM2MzYyMjU4OTA0MzgzNTQ5.YIc5DQ.PW9C_q9Av1oGZMKnEU8W6eB5O7I')
 db.close()
