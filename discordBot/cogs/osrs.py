@@ -9,9 +9,13 @@ class OSRS(commands.Cog):
 
     @commands.command()
     async def osrs(self, ctx, *, username):
-        await ctx.send('fetching stats for ' + str(username) + "...")
+        username = str(username)
         user = Hiscores(username)
-        await ctx.send(user.skills['attack'].level)
+        user = user.skills
+        embedVar = discord.Embed(title="OSRS Stats for "+ username)
+        for i in user:
+            embedVar.add_field(name=user[i].name, value=user[i].level)
+        await ctx.send(embed = embedVar)
         #add error when user doesnt exit
 
 def setup(client):
