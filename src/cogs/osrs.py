@@ -9,7 +9,7 @@ class OSRS(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def osrs(self, ctx, *, username):
+    async def stats(self, ctx, *, username):
         username = str(username)
         user = Hiscores(username)
         user = user.skills
@@ -29,6 +29,9 @@ class OSRS(commands.Cog):
         embedVar.add_field(name='total', value=total)
 
         await ctx.send(file=file, embed=embedVar)
+        
+    @commands.command()
+    async def ge(self, ctx, *, item):
 
 def setup(client):
     client.add_cog(OSRS(client))
