@@ -20,7 +20,7 @@ class OSRS(commands.Cog):
                  'magic', 'fletching', 'woodcutting', 'runecrafting', 'slayer',
                  'farming','construction','hunter')
         embedVar = discord.Embed(title="OSRS Stats for "+ username)
-        file = discord.File('cogs/osrsIcons/osrsIcon.png', filename ='image.png')
+        file = discord.File('../assets/osrsIcons/osrsicons.png', filename ='image.png')
         embedVar.set_image(url='attachment://image.png')
         total = 0
         for i,j in enumerate(skills):
