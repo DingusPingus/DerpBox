@@ -15,7 +15,6 @@ class OSRS(commands.Cog):
         user = Hiscores(username)
         print(user)
         user = user.skills
-        print(user)
         #/assets/osrsIcons/osrsicons.png
         skills = ('attack', 'hitpoints', 'mining', 'strength', 'agility',
                  'smithing', 'defence', 'herblore', 'fishing', 'ranged',
@@ -25,9 +24,9 @@ class OSRS(commands.Cog):
         embedVar = discord.Embed(title="OSRS Stats for "+ username)
         total = 0
         for i,j in enumerate(skills):
-            embedVar.add_field(name=user[j].name, value=user[j].level)
+            embedVar.add_field(name=user[j].name.capitalize(), value=user[j].level)
             total +=user[j].level
-        embedVar.add_field(name='total', value=total)
+        embedVar.add_field(name='Total', value=total)
 
         await ctx.send( embed=embedVar)
 
