@@ -4,6 +4,8 @@ import sys
 from PIL import Image
 from osrs_api.const import AccountType
 from osrs_api import Hiscores
+from osrs_api import GrandExchange
+from osrsbox import items_api
 from discord.ext import commands
 
 class OSRS(commands.Cog):
@@ -35,9 +37,16 @@ class OSRS(commands.Cog):
             await ctx.send( embed=embedVar)
 
     @commands.command(aliases=['Ge', 'GE'])
-    async def ge(self, ctx, *, item):
-        item = str(item)
-        #TODO add grand exchange embed output from osrs api
+    async def ge(self, ctx, *, userInput):
+        userInput = str(userInput)
+        items = items_api.load()
+        try:
+            for item in items:
+                if(item.name == userInput and item.duplicate == false):
+                    userItem = item.name
+        except:
+            await ctx.send('The item' + userInput + 'does not exist, make sure you have provided the correct name!')
+        #make it so its not so low querying the entire item database if id is already provided
 
 def setup(client):
     client.add_cog(OSRS(client))
