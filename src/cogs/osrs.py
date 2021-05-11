@@ -18,7 +18,7 @@ class OSRS(commands.Cog):
         try:
             user = Hiscores(username)
         except:
-            await ctx.send('There is no player named ' + username)
+            await ctx.send('There is no OSRS player named ' + username)
         else:
             user = user.skills
 
