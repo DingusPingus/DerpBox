@@ -12,6 +12,20 @@ class OSRS(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    #searches OSRS items database for ID of item provided by user in userItem
+    @commands.command()
+    async def itemid(self, ctx, *, userItem):
+        
+        itemName = userItem
+        items = items_api.load()
+        for item in items:
+            if(item.name.lower() == userItem.lower() and item.duplicate == False):
+                userItem = item
+                break
+        await ctx.send(f'the item id for {userItem.name} is {userItem.id}')
+        return userItem
+
+
     @commands.command(aliases=['Stats'])
     async def stats(self, ctx, *, username):
         username = str(username)
@@ -35,6 +49,7 @@ class OSRS(commands.Cog):
             embedVar.add_field(name='Total', value=total)
 
             await ctx.send( embed=embedVar)
+
     @stats.error
     async def stats_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -43,15 +58,14 @@ class OSRS(commands.Cog):
     
     @commands.command(aliases=['Ge', 'GE'])
     async def ge(self, ctx, *, userInput):
-        userInput = str(userInput)
-        items = items_api.load()
-        try:
-            for item in items:
-                if(item.name == userInput and item.duplicate == false):
-                    userItem = item.name
-        except:
-            await ctx.send('The item' + userInput + 'does not exist, make sure you have provided the correct name!')
-        #make it so its not so low querying the entire item database if id is already provided
+        if(isinstance(userInput, int)):
+        elif(isinstance(userInput, str)):
+    
+        else:
+            await ctx.send('Please provide a valid item ID or item name')
+
+
+
 
 def setup(client):
     client.add_cog(OSRS(client))
