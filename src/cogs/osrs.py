@@ -60,7 +60,7 @@ class OSRS(commands.Cog):
     async def ge(self, ctx, *, userInput):
         if(isinstance(userInput, int)):
         elif(isinstance(userInput, str)):
-    
+            #TODO ADD CONVERTER FOR ITEM NAME OR ITEM ID TO ITEM OBJECT FROM OSRSDB
         else:
             await ctx.send('Please provide a valid item ID or item name')
 
