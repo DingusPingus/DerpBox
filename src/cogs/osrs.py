@@ -35,7 +35,12 @@ class OSRS(commands.Cog):
             embedVar.add_field(name='Total', value=total)
 
             await ctx.send( embed=embedVar)
+    @stats.error
+    async def stats_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Please provide a username')
 
+    
     @commands.command(aliases=['Ge', 'GE'])
     async def ge(self, ctx, *, userInput):
         userInput = str(userInput)
