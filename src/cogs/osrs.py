@@ -61,6 +61,7 @@ class OSRS(commands.Cog):
         if(isinstance(userInput, int)):
         elif(isinstance(userInput, str)):
             #TODO ADD CONVERTER FOR ITEM NAME OR ITEM ID TO ITEM OBJECT FROM OSRSDB
+            #test for vscode source control
         else:
             await ctx.send('Please provide a valid item ID or item name')
 
