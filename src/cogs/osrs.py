@@ -4,11 +4,27 @@ import sys
 from PIL import Image
 from osrs_api.const import AccountType
 from osrs_api import Hiscores
+from osrs_api import GrandExchange
+from osrsbox import items_api
 from discord.ext import commands
 
 class OSRS(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    #searches OSRS items database for ID of item provided by user in userItem
+    @commands.command()
+    async def itemid(self, ctx, *, userItem):
+        
+        itemName = userItem
+        items = items_api.load()
+        for item in items:
+            if(item.name.lower() == userItem.lower() and item.duplicate == False):
+                userItem = item
+                break
+        await ctx.send(f'the item id for {userItem.name} is {userItem.id}')
+        return userItem
+
 
     @commands.command(aliases=['Stats'])
     async def stats(self, ctx, *, username):
@@ -16,7 +32,7 @@ class OSRS(commands.Cog):
         try:
             user = Hiscores(username)
         except:
-            await ctx.send('There is no player named ' + username)
+            await ctx.send('There is no OSRS player named ' + username)
         else:
             user = user.skills
 
@@ -34,10 +50,22 @@ class OSRS(commands.Cog):
 
             await ctx.send( embed=embedVar)
 
+    @stats.error
+    async def stats_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('Please provide a username')
+
+    
     @commands.command(aliases=['Ge', 'GE'])
-    async def ge(self, ctx, *, item):
-        item = str(item)
-        #TODO add grand exchange embed output from osrs api
+    async def ge(self, ctx, *, userInput):
+        if(isinstance(userInput, int)):
+        elif(isinstance(userInput, str)):
+            #TODO ADD CONVERTER FOR ITEM NAME OR ITEM ID TO ITEM OBJECT FROM OSRSDB
+        else:
+            await ctx.send('Please provide a valid item ID or item name')
+
+
+
 
 def setup(client):
     client.add_cog(OSRS(client))
