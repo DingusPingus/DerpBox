@@ -1,12 +1,14 @@
 import discord
 import os
 import sys
-from PIL import Image
 from osrs_api.const import AccountType
 from osrs_api import Hiscores
 from osrs_api import GrandExchange
 from osrsbox import items_api
 from discord.ext import commands
+from osrsbox.items_api.item_properties import ItemProperties
+from converters.itemObject import ItemConverter
+
 
 class OSRS(commands.Cog):
     def __init__(self, client):
@@ -14,17 +16,11 @@ class OSRS(commands.Cog):
 
     #searches OSRS items database for ID of item provided by user in userItem
     @commands.command()
-    async def itemid(self, ctx, *, userItem):
-        
-        itemName = userItem
-        items = items_api.load()
-        for item in items:
-            if(item.name.lower() == userItem.lower() and item.duplicate == False):
-                userItem = item
-                break
-        await ctx.send(f'the item id for {userItem.name} is {userItem.id}')
-        return userItem
-
+    async def itemid(self, ctx, *, userItem: ItemConverter):
+        try:
+            await ctx.send(f'the item id for {userItem.name} is {userItem.id}')
+        except AttributeError:
+            await ctx.send('invalid ID or name provided')
 
     @commands.command(aliases=['Stats'])
     async def stats(self, ctx, *, username):
@@ -57,15 +53,11 @@ class OSRS(commands.Cog):
 
     
     @commands.command(aliases=['Ge', 'GE'])
-    async def ge(self, ctx, *, userInput):
-        if(isinstance(userInput, int)):
-        elif(isinstance(userInput, str)):
-            #TODO ADD CONVERTER FOR ITEM NAME OR ITEM ID TO ITEM OBJECT FROM OSRSDB
-        else:
-            await ctx.send('Please provide a valid item ID or item name')
-
-
-
+    async def ge(self, ctx, *, userItem: ItemConverter):
+        if(userItem.tradeable_on_ge):
+            priceData = GrandExchange.item(userItem.id)
+            await ctx.send(f'The item {userItem.name} has a price of {priceData.price()}')
+            
 
 def setup(client):
     client.add_cog(OSRS(client))
