@@ -1,7 +1,6 @@
 import discord
 import os
 import sys
-from PIL import Image
 from osrs_api.const import AccountType
 from osrs_api import Hiscores
 from osrs_api import GrandExchange
@@ -19,7 +18,6 @@ class OSRS(commands.Cog):
     @commands.command()
     async def itemid(self, ctx, *, userItem: ItemConverter):
         await ctx.send(f'the item id for {userItem.name} is {userItem.id}')
-
 
     @commands.command(aliases=['Stats'])
     async def stats(self, ctx, *, username):
