@@ -17,7 +17,10 @@ class OSRS(commands.Cog):
     #searches OSRS items database for ID of item provided by user in userItem
     @commands.command()
     async def itemid(self, ctx, *, userItem: ItemConverter):
-        await ctx.send(f'the item id for {userItem.name} is {userItem.id}')
+        try:
+            await ctx.send(f'the item id for {userItem.name} is {userItem.id}')
+        except AttributeError:
+            await ctx.send('invalid ID or name provided')
 
     @commands.command(aliases=['Stats'])
     async def stats(self, ctx, *, username):
@@ -51,7 +54,10 @@ class OSRS(commands.Cog):
     
     @commands.command(aliases=['Ge', 'GE'])
     async def ge(self, ctx, *, userItem: ItemConverter):
-        await ctx.send('test')
+        if(userItem.tradeable_on_ge):
+            priceData = GrandExchange.item(userItem.id)
+            await ctx.send(f'The item {userItem.name} has a price of {priceData.price()}')
+            
 
 def setup(client):
     client.add_cog(OSRS(client))

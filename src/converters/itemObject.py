@@ -7,7 +7,6 @@ class ItemConverter(commands.Converter):
         items = items_api.load()
         try:
             argument = int(argument)
-            print('test')
             for item in items:
                 if(item.id == argument):
                     return item 
