@@ -1,6 +1,7 @@
 import discord
 import sqlite3
 import re
+import os
 import traceback
 from discord.ext import commands
 
@@ -10,8 +11,7 @@ class Nial(commands.Cog):
 
     @commands.command(aliases=['nial4life','nial','Nial', 'NialCount', 'nialcount'])
     async def nialCount(self, ctx):
-        db = sqlite3.connect('counters.db')
-
+        db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
         c = db.cursor()
         nialCounter = c.execute("SELECT * FROM Counters WHERE name = '#nial4life' ").fetchone()[1]
         nialCounter += 1
@@ -26,7 +26,7 @@ class Nial(commands.Cog):
             channel = message.channel
             nialCount = len(re.findall("nial", message.content))
             if (nialCount > 0):
-                await channel.send('progress')
+                pass #add database connection with users here
 
             
 def setup(client):
