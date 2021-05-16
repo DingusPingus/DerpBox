@@ -23,9 +23,7 @@ class Nial(commands.Cog):
     async def on_message(self, message):
         channel = message.channel
         if(message.author.id != self.client.user.id):
+            await channel.send()
             
-        await channel.send()
-
-
 def setup(client):
     client.add_cog(Nial(client))
