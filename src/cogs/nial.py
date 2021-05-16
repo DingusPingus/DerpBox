@@ -1,6 +1,7 @@
 import discord
 import sqlite3
 import re
+import traceback
 from discord.ext import commands
 
 class Nial(commands.Cog):
@@ -21,9 +22,12 @@ class Nial(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        channel = message.channel
         if(message.author.id != self.client.user.id):
-            await channel.send()
+            channel = message.channel
+            nialCount = len(re.findall("nial", message.content))
+            if (nialCount > 0):
+                await channel.send('progress')
+
             
 def setup(client):
     client.add_cog(Nial(client))
