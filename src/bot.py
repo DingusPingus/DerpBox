@@ -24,7 +24,4 @@ for filename in os.listdir('./cogs'):
                 client.load_extension(f'cogs.{filename[:-3]}')
 
 
-
-#TODO implement database for other commands applied to nial
-
 client.run('ODM2MzYyMjU4OTA0MzgzNTQ5.YIc5DQ.PW9C_q9Av1oGZMKnEU8W6eB5O7I')

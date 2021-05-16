@@ -1,5 +1,6 @@
 import discord
 import sqlite3
+import re
 from discord.ext import commands
 
 class Nial(commands.Cog):
@@ -17,6 +18,13 @@ class Nial(commands.Cog):
         db.commit()
         await ctx.send('#nial4life: ' + str(nialCounter))
         db.close
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        channel = message.channel
+        if(message.author.id != self.client.user.id):
+            
+        await channel.send()
 
 
 def setup(client):
