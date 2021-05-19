@@ -15,7 +15,7 @@ class Nial(commands.Cog):
         c = db.cursor()
         nialCounter = c.execute("SELECT * FROM Counters WHERE name = '#nial4life' ").fetchone()[1]
         nialCounter += 1
-        c.execute("UPDATE Counters SET val =" +str(nialCounter)+ " WHERE name ='#nial4life' ")
+        c.execute("UPDATE Counters SET val =" + str(nialCounter)+ " WHERE name ='#nial4life' ")
         db.commit()
         await ctx.send('#nial4life: ' + str(nialCounter))
         db.close
@@ -24,9 +24,16 @@ class Nial(commands.Cog):
     async def on_message(self, message):
         if(message.author.id != self.client.user.id):
             channel = message.channel
-            nialCount = len(re.findall("nial", message.content))
+            nialCount = len(re.findall("nial", message.content, re.IGNORECASE))
             if (nialCount > 0):
-                pass #add database connection with users here
+                db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
+                c = db.cursor()
+                print(message.guild.id, message.author.id)
+                c.execute("INSERT OR IGNORE INTO NialCount(guildID, userID) VALUES(?,?)",(message.guild.id, message.author.id))
+                c.execute("UPDATE NialCount SET nialCount = ? WHERE guildID = ? AND userID = ?",(nialCount, message.guild.id, message.author.id))
+                await channel.send(f'I have detected {nialCount} nials')
+                db.commit()
+                db.close()
 
             
 def setup(client):
