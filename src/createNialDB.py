@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 def create_nial():
-    db = sqlite3.connect(os.path.realpath('../database/counters.db'))
+    db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
     c = db.cursor()
     c.execute('DROP TABLE IF EXISTS NialCount')
     c.execute('''CREATE TABLE IF NOT EXISTS NialCount(
