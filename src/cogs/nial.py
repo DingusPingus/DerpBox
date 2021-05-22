@@ -8,7 +8,6 @@ from discord.ext import commands
 class Nial(commands.Cog):
     def __init__(self, client):
         self.client = client
-
     @commands.command(aliases=['nial4life','nial','Nial', 'NialCount', 'nialcount'])
     async def nialCount(self, ctx):
         db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
@@ -20,6 +19,14 @@ class Nial(commands.Cog):
         await ctx.send('#nial4life: ' + str(nialCounter))
         db.close
 
+    @commands.command(aliases=['NialRank','Nialrank', 'nialrank'])
+    async def nialRank(self, ctx, *, member: discord.Member):
+        db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
+        c = db.cursor()
+        rank = c.execute('SELECT * FROM NialCount WHERE guildID = ? AND userID =?',(ctx.guild.id, member.id)).fetchone()
+        await ctx.send(f'{member.name} has typed {rank[2]} nials')
+
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if(message.author.id != self.client.user.id):
@@ -28,10 +35,8 @@ class Nial(commands.Cog):
             if (nialCount > 0):
                 db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
                 c = db.cursor()
-                print(message.guild.id, message.author.id)
                 c.execute("INSERT OR IGNORE INTO NialCount(guildID, userID) VALUES(?,?)",(message.guild.id, message.author.id))
-                c.execute("UPDATE NialCount SET nialCount = ? WHERE guildID = ? AND userID = ?",(nialCount, message.guild.id, message.author.id))
-                await channel.send(f'I have detected {nialCount} nials')
+                c.execute("UPDATE NialCount SET nialCount = nialCount + ? WHERE guildID = ? AND userID = ?",(nialCount, message.guild.id, message.author.id))
                 db.commit()
                 db.close()
 
