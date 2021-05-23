@@ -8,6 +8,7 @@ from discord.ext import commands
 class Nial(commands.Cog):
     def __init__(self, client):
         self.client = client
+
     @commands.command(aliases=['nial4life','nial','Nial', 'NialCount', 'nialcount'])
     async def nialCount(self, ctx):
         db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
@@ -26,6 +27,10 @@ class Nial(commands.Cog):
         rank = c.execute('SELECT * FROM NialCount WHERE guildID = ? AND userID =?',(ctx.guild.id, member.id)).fetchone()
         await ctx.send(f'{member.name} has typed {rank[2]} nials')
 
+    @nialRank.error
+    async def nialRank_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send('You must mention the user or provide their id as an argument.')
 
     @commands.Cog.listener()
     async def on_message(self, message):

@@ -47,9 +47,9 @@ class OSRS(commands.Cog):
             await ctx.send( embed=embedVar)
 
     @stats.error
-    async def stats_error(ctx, error):
+    async def stats_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Please provide a username')
+            await ctx.send('Please provide a valid username')
 
     
     @commands.command(aliases=['Ge', 'GE'])
