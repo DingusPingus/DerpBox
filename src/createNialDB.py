@@ -8,7 +8,7 @@ def create_nial():
     c.execute('''CREATE TABLE IF NOT EXISTS NialCount(
                 guildID BLOB NOT NULL,
                 userID BLOB NOT NULL,
-                nialCount INTEGER,
+                nialCount INTEGER DEFAULT 0,
                 PRIMARY KEY(guildID, userID)
                 )''')
     c.execute(('''CREATE UNIQUE INDEX giduid ON NialCount(guildID, userID)'''))

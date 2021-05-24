@@ -1,6 +1,8 @@
 import discord
 import os
 import sys
+import requests
+from requests.exceptions import HTTPError
 from osrs_api.const import AccountType
 from osrs_api import Hiscores
 from osrs_api import GrandExchange
@@ -47,17 +49,33 @@ class OSRS(commands.Cog):
             await ctx.send( embed=embedVar)
 
     @stats.error
-    async def stats_error(ctx, error):
+    async def stats_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Please provide a username')
+            await ctx.send('Please provide a valid username')
 
     
     @commands.command(aliases=['Ge', 'GE'])
     async def ge(self, ctx, *, userItem: ItemConverter):
+
+        #https://pynative.com/parse-json-response-using-python-requests-library/
         if(userItem.tradeable_on_ge):
-            priceData = GrandExchange.item(userItem.id)
-            await ctx.send(f'The item {userItem.name} has a price of {priceData.price()}')
-            
+            try:
+                response = requests.get('https://services.runescape,com/m-itemdb_oldschool/api/catalogue/detail.json?item=' +str(userItem.id))
+                response.raise_for_status()
+                itemResponse = response.json()
+            except HTTPError as http_err: 
+                print(f'HTTP error occurred: {http_err}')
+            except Exception as err:
+                print(f'Other error occurred: {err}')
+
+            for key, value in itemResponse.items():
+                print(key, ':', value)
+            await ctx.send(f'test')
+
+    @ge.error
+    async def ge_error(self, ctx, error):
+        if isinstance(error, AttributeError):
+            await ctx.send('invalid ID or name provided')
 
 def setup(client):
     client.add_cog(OSRS(client))
