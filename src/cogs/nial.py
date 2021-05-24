@@ -31,7 +31,6 @@ class Nial(commands.Cog):
         db.close()
         await ctx.send(f'{member.name} has typed {rank[2]} nials')
         
-
     @nialRank.error
     async def nialRank_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
@@ -41,16 +40,13 @@ class Nial(commands.Cog):
     async def nialTop(self, ctx):
         db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
         c = db.cursor()
-        ranks = c.execute('SELECT * FROM NialCount WHERE guildID = ? ORDER BY nialCount LIMIT 10',(ctx.guild.id,)).fetchall()
+        ranks = c.execute('SELECT * FROM NialCount WHERE guildID = ? ORDER BY nialCount DESC LIMIT 10',(ctx.guild.id,)).fetchall()
         db.close()
         embedVar = discord.Embed(title="nial leaderboards")
         for row in ranks:
             member = ctx.message.guild.get_member(row[1])
             embedVar.add_field(name=member.name, value=row[2], inline=False)
         await ctx.send(embed=embedVar)
-        
-        
-
    
     @commands.Cog.listener()
     async def on_message(self, message):
