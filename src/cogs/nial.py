@@ -21,12 +21,16 @@ class Nial(commands.Cog):
         db.close()
 
     @commands.command(aliases=['NialRank','Nialrank', 'nialrank'])
-    async def nialRank(self, ctx, *, member: discord.Member):
+    async def nialRank(self, ctx, *, member: discord.Member=None):
+        if member is None:
+            member = ctx.author
+
         db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
         c = db.cursor()
         rank = c.execute('SELECT * FROM NialCount WHERE guildID = ? AND userID =?',(ctx.guild.id, member.id)).fetchone()
-        await ctx.send(f'{member.name} has typed {rank[2]} nials')
         db.close()
+        await ctx.send(f'{member.name} has typed {rank[2]} nials')
+        
 
     @nialRank.error
     async def nialRank_error(self, ctx, error):
@@ -37,12 +41,12 @@ class Nial(commands.Cog):
     async def nialTop(self, ctx):
         db = sqlite3.connect(os.path.realpath('../data/database/counters.db'))
         c = db.cursor()
-        ranks = c.execute('SELECT * FROM NialCount WHERE guildID = ? ORDER BY nialCount DESC LIMIT 10',(ctx.guild.id,)).fetchall()
+        ranks = c.execute('SELECT * FROM NialCount WHERE guildID = ? ORDER BY nialCount LIMIT 10',(ctx.guild.id,)).fetchall()
         db.close()
-        embedVar = discord.Embed(title="\"nial\" leaderboards")
+        embedVar = discord.Embed(title="nial leaderboards")
         for row in ranks:
-            user = ctx.message.guild.get_member(row[1])
-            embedVar.add_field(name=user.name, value=row[2], inline=False)
+            member = ctx.message.guild.get_member(row[1])
+            embedVar.add_field(name=member.name, value=row[2], inline=False)
         await ctx.send(embed=embedVar)
         
         
