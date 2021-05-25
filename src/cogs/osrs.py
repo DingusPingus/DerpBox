@@ -2,6 +2,7 @@ import discord
 import os
 import sys
 import requests
+import base64
 from requests.exceptions import HTTPError
 from osrs_api.const import AccountType
 from osrs_api import Hiscores
@@ -10,6 +11,7 @@ from osrsbox import items_api
 from discord.ext import commands
 from osrsbox.items_api.item_properties import ItemProperties
 from converters.itemObject import ItemConverter
+
 
 
 class OSRS(commands.Cog):
@@ -60,15 +62,23 @@ class OSRS(commands.Cog):
         #https://pynative.com/parse-json-response-using-python-requests-library/
         if(userItem.tradeable_on_ge):
             try:
-                response = requests.get('http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=' +str(userItem.id))
+                url = 'https://oldschool.runescape.wiki/prices.runescape.wiki/api/v1/osrs/latest?id='
+                headers ={
+                    'User-Agent': 'simple discord bot GE lookup - @💩Dingus💩#5352 '
+                }
+                response = requests.get(url +str(userItem.id))
                 response.raise_for_status()
-                itemResponse = response.json()
-                print(itemResponse)
+                itemData_json = response.json()['data']
             except HTTPError as http_err: 
                 print(f'HTTP error occurred: {http_err}')
             except Exception as err:
                 print(f'Other error occurred: {err}')
-            embedVar = discord.Embed(title='we do a little testing', description='just a little bit more testing')
+
+            #MAKE SURE RESPONSE FROM OSRS WIKI IS WORKING AND FIND A WAY TO FIX ICON THUMBNAIL (PROBABLY SEPERATE QUERY TO JAGEX API)
+            embedVar = discord.Embed(title=userItem.name, description=userItem.examine, colour=discord.Colour.lighter_grey())
+            embedVar.set_thumbnail(url=itemData_json['icon'])
+
+           
             await ctx.send(embed=embedVar)
         else:
             await ctx.send('That item is not tradeable on the GE')

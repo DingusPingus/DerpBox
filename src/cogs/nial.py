@@ -42,7 +42,7 @@ class Nial(commands.Cog):
         c = db.cursor()
         ranks = c.execute('SELECT * FROM NialCount WHERE guildID = ? ORDER BY nialCount DESC LIMIT 10',(ctx.guild.id,)).fetchall()
         db.close()
-        embedVar = discord.Embed(title="nial leaderboards")
+        embedVar = discord.Embed(title="nial leaderboards", colour=discord.Colour.blue())
         for row in ranks:
             member = ctx.message.guild.get_member(row[1])
             embedVar.add_field(name=member.name, value=row[2], inline=False)
