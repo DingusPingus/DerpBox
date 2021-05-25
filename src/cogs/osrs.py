@@ -60,22 +60,25 @@ class OSRS(commands.Cog):
         #https://pynative.com/parse-json-response-using-python-requests-library/
         if(userItem.tradeable_on_ge):
             try:
-                response = requests.get('https://services.runescape,com/m-itemdb_oldschool/api/catalogue/detail.json?item=' +str(userItem.id))
+                response = requests.get('http://services.runescape.com/m=itemdb_oldschool/api/catalogue/detail.json?item=' +str(userItem.id))
                 response.raise_for_status()
                 itemResponse = response.json()
+                print(itemResponse)
             except HTTPError as http_err: 
                 print(f'HTTP error occurred: {http_err}')
             except Exception as err:
                 print(f'Other error occurred: {err}')
-
-            for key, value in itemResponse.items():
-                print(key, ':', value)
-            await ctx.send(f'test')
+            embedVar = discord.Embed(title='we do a little testing', description='just a little bit more testing')
+            await ctx.send(embed=embedVar)
+        else:
+            await ctx.send('That item is not tradeable on the GE')
+        
 
     @ge.error
     async def ge_error(self, ctx, error):
         if isinstance(error, AttributeError):
             await ctx.send('invalid ID or name provided')
+        
 
 def setup(client):
     client.add_cog(OSRS(client))
