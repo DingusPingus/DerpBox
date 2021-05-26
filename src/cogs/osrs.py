@@ -62,23 +62,22 @@ class OSRS(commands.Cog):
         #https://pynative.com/parse-json-response-using-python-requests-library/
         if(userItem.tradeable_on_ge):
             try:
-                url = 'https://oldschool.runescape.wiki/prices.runescape.wiki/api/v1/osrs/latest?id='
+                url = 'http://prices.runescape.wiki/api/v1/osrs/latest?id='
                 headers ={
-                    'User-Agent': 'simple discord bot GE lookup - @💩Dingus💩#5352 '
+                    'User-Agent': 'simple discord bot GE lookup - @%uD83D%uDCA9Dingus%uD83D%uDCA9#5352'
                 }
-                response = requests.get(url +str(userItem.id))
+                response = requests.get(url +str(userItem.id), headers=headers)
                 response.raise_for_status()
-                itemData_json = response.json()['data']
+                itemData_json = response.json()['data'][str(userItem.id)]
             except HTTPError as http_err: 
                 print(f'HTTP error occurred: {http_err}')
             except Exception as err:
                 print(f'Other error occurred: {err}')
-
-            #MAKE SURE RESPONSE FROM OSRS WIKI IS WORKING AND FIND A WAY TO FIX ICON THUMBNAIL (PROBABLY SEPERATE QUERY TO JAGEX API)
-            embedVar = discord.Embed(title=userItem.name, description=userItem.examine, colour=discord.Colour.lighter_grey())
-            embedVar.set_thumbnail(url=itemData_json['icon'])
-
            
+            embedVar = discord.Embed(title=userItem.name, description=userItem.examine, colour=discord.Colour.lighter_grey())
+            embedVar.set_thumbnail(url='https://raw.githubusercontent.com/runelite/static.runelite.net/gh-pages/cache/item/icon/'+str(userItem.id)+'.png') \
+                    .add_field(name='high', value=itemData_json['high']) \
+                    .add_field(name='low', value=itemData_json['low'])
             await ctx.send(embed=embedVar)
         else:
             await ctx.send('That item is not tradeable on the GE')
