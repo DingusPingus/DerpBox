@@ -2,6 +2,7 @@ import discord
 import os
 import sys
 import requests
+import base64
 from requests.exceptions import HTTPError
 from osrs_api.const import AccountType
 from osrs_api import Hiscores
@@ -10,6 +11,7 @@ from osrsbox import items_api
 from discord.ext import commands
 from osrsbox.items_api.item_properties import ItemProperties
 from converters.itemObject import ItemConverter
+
 
 
 class OSRS(commands.Cog):
@@ -60,22 +62,32 @@ class OSRS(commands.Cog):
         #https://pynative.com/parse-json-response-using-python-requests-library/
         if(userItem.tradeable_on_ge):
             try:
-                response = requests.get('https://services.runescape,com/m-itemdb_oldschool/api/catalogue/detail.json?item=' +str(userItem.id))
+                url = 'http://prices.runescape.wiki/api/v1/osrs/latest?id='
+                headers ={
+                    'User-Agent': 'simple discord bot GE lookup - @%uD83D%uDCA9Dingus%uD83D%uDCA9#5352'
+                }
+                response = requests.get(url +str(userItem.id), headers=headers)
                 response.raise_for_status()
-                itemResponse = response.json()
+                itemData_json = response.json()['data'][str(userItem.id)]
             except HTTPError as http_err: 
                 print(f'HTTP error occurred: {http_err}')
             except Exception as err:
                 print(f'Other error occurred: {err}')
-
-            for key, value in itemResponse.items():
-                print(key, ':', value)
-            await ctx.send(f'test')
+           
+            embedVar = discord.Embed(title=userItem.name, description=userItem.examine, colour=discord.Colour.lighter_grey())
+            embedVar.set_thumbnail(url='https://raw.githubusercontent.com/runelite/static.runelite.net/gh-pages/cache/item/icon/'+str(userItem.id)+'.png') \
+                    .add_field(name='high', value=itemData_json['high']) \
+                    .add_field(name='low', value=itemData_json['low'])
+            await ctx.send(embed=embedVar)
+        else:
+            await ctx.send('That item is not tradeable on the GE')
+        
 
     @ge.error
     async def ge_error(self, ctx, error):
         if isinstance(error, AttributeError):
             await ctx.send('invalid ID or name provided')
+        
 
 def setup(client):
     client.add_cog(OSRS(client))
