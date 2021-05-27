@@ -1,10 +1,16 @@
 import discord
 import sqlite3
 import os
+import json
 from discord.ext import commands
+
 
 intents = discord.Intents(messages = True, guilds = True, reactions = True, members = True, presences = True)
 client = commands.Bot(command_prefix = '$', intents = intents)
+os.path.realpath('../data/config.json')
+with open(os.path.realpath('../data/config.json'), "r") as configjsonfile:
+        configjson = json.load(configjsonfile)
+        DISCORD_TOKEN = configjson["token"]
 
 @client.command()
 async def load(ctx, extension):
@@ -27,4 +33,4 @@ for filename in os.listdir('./cogs'):
                 client.load_extension(f'cogs.{filename[:-3]}')
 
 
-client.run('ODM2MzYyMjU4OTA0MzgzNTQ5.YIc5DQ.PW9C_q9Av1oGZMKnEU8W6eB5O7I')
+client.run(DISCORD_TOKEN)
