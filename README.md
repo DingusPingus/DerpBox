@@ -19,4 +19,5 @@ Discord bot for private discord server
 - Square of unicode characters    
 ![image](https://user-images.githubusercontent.com/55999153/132577006-d6b79e5c-12c1-45e1-8881-fae537432b35.png)
 
-
+## NOTE
+- You will not be able to run this code without a discord bot OAUTH token which is not provided alongside this repository
