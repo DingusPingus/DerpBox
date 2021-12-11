@@ -21,3 +21,4 @@ Discord bot for private discord server
 
 ## NOTE
 - You will not be able to run this code without a discord bot OAUTH token which is not provided alongside this repository
+- Due to the relatively recent [shutdown](https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1) of the discord.py project, aswell as since this repository is not currently being worked on, the code for this project will eventually become deprecated.
